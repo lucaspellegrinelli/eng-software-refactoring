@@ -2,22 +2,34 @@ package com.lucaspellegrinelli.engsoftrefactor;
 
 import java.util.Enumeration;
 public class TextStatement extends Statement{
-    public String value(Customer aCustomer) {
-        Enumeration rentals = aCustomer.getRentals();
-        String result = "Rental Record for " + aCustomer.getName() +
-                "\n";
-        while (rentals.hasMoreElements()) {
-            Rental each = (Rental) rentals.nextElement();
-            //show figures for this rental
-            result += "\t" + each.getMovie().getTitle()+ "\t" +
-                    String.valueOf(each.getCharge()) + "\n";
-        }
-        //add footer lines
-        result += "Amount owed is " +
-                String.valueOf(aCustomer.getTotalCharge()) + "\n";
-        result += "You earned " +
+
+    private String createHeader(Customer aCustomer){
+        return "Rental Record for " + aCustomer.getName() + "\n";
+    }
+
+    private String createItem(Rental aRental){
+        return "\t" + aRental.getMovie().getTitle()+ "\t" + String.valueOf(aRental.getCharge()) + "\n";
+    }
+
+    private String createFooter(Customer aCustomer){
+        String out = "Amount owed is " + String.valueOf(aCustomer.getTotalCharge()) + "\n";
+        out += "You earned " +
                 String.valueOf(aCustomer.getTotalFrequentRenterPoints()) +
                 " frequent renter points";
-        return result;
+        return out;
+    }
+
+    public String value(Customer aCustomer){
+        String finalValue = "";
+        Enumeration rentals = aCustomer.getRentals();
+
+        finalValue += createHeader(aCustomer);
+        while (rentals.hasMoreElements()) {
+            Rental each = (Rental) rentals.nextElement();
+            finalValue += createItem(each);
+        }
+
+        finalValue += createFooter(aCustomer);
+        return finalValue;
     }
 }
